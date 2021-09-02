@@ -213,7 +213,7 @@ extern "C" {
 #define ZIP_OPSYS_OS_400 0x12u
 #define ZIP_OPSYS_OS_X 0x13u
 
-#define ZIP_OPSYS_DEFAULT ZIP_OPSYS_UNIX
+#define ZIP_OPSYS_DEFAULT ZIP_OPSYS_DOS
 
 
 enum zip_source_cmd {
