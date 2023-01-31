@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.14.7)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 if (${CMAKE_VERSION} VERSION_LESS "3.17.0")
@@ -188,16 +188,16 @@ else()
     )
 
   FetchContent_GetProperties(zlib)
-
   if(NOT zlib_POPULATED)
       FetchContent_Populate(zlib)
       add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+      add_library(libZip_zlibFix INTERFACE)
+      target_include_directories(libZip_zlibFix INTERFACE "${zlib_BINARY_DIR}")
+      target_include_directories(libZip_zlibFix INTERFACE "${zlib_SOURCE_DIR}")
+      target_link_libraries(libZip_zlibFix INTERFACE zlibstatic)
+      add_library(ZLIB::ZLIB ALIAS libZip_zlibFix)
   endif()
 
-  target_include_directories(zlibstatic PUBLIC  
-      ${zlib_SOURCE_DIR}
-      ${zlib_BINARY_DIR}
-    )
 endif()
 
 if(ENABLE_BZIP2)
