@@ -176,29 +176,30 @@ int main(int argc, char *argv[]) { }" HAVE_NULLABLE)
 
 test_big_endian(WORDS_BIGENDIAN)
 
-#find_package(ZLIB 1.1.2 REQUIRED)
+find_package(ZLIB 1.1.2 REQUIRED)
 
-include(FetchContent)
+if(NOT ZLIB_FOUND)
+  include(FetchContent)
 
-message(STATUS "Fetching zlib")
+  message(STATUS "Fetching zlib")
 
-FetchContent_Declare(zlib
-  GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG v1.2.11
-  )
+  FetchContent_Declare(zlib
+    GIT_REPOSITORY https://github.com/madler/zlib.git
+    GIT_TAG v1.2.11
+    )
 
-FetchContent_GetProperties(zlib)
+  FetchContent_GetProperties(zlib)
 
-if(NOT zlib_POPULATED)
-    FetchContent_Populate(zlib)
-    add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  if(NOT zlib_POPULATED)
+      FetchContent_Populate(zlib)
+      add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  endif()
+
+  target_include_directories(zlibstatic PUBLIC  
+      ${zlib_SOURCE_DIR}
+      ${zlib_BINARY_DIR}
+    )
 endif()
-
-target_include_directories(zlibstatic PUBLIC  
-    ${zlib_SOURCE_DIR}
-    ${zlib_BINARY_DIR}
-  )
-
 
 if(ENABLE_BZIP2)
   find_package(BZip2)
