@@ -468,3 +468,5 @@ if(LIBZIP_DO_INSTALL)
     )
 endif()
 
+message("Florian HELLO!")
+
