@@ -10,6 +10,7 @@ project(libzip
   VERSION 1.8.0
   LANGUAGES C)
 
+option(FETCH_ZLIB "Fetching zlib" ON)
 option(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
 option(ENABLE_GNUTLS "Enable use of GnuTLS" ON)
 option(ENABLE_MBEDTLS "Enable use of mbed TLS" ON)
@@ -175,10 +176,9 @@ int foo(char * _Nullable bar);
 int main(int argc, char *argv[]) { }" HAVE_NULLABLE)
 
 test_big_endian(WORDS_BIGENDIAN)
-
-find_package(ZLIB 1.1.2 REQUIRED)
-
-if(NOT ZLIB_FOUND)
+if(NOT FETCH_ZLIB)
+  find_package(ZLIB 1.1.2 REQUIRED)
+else()
   include(FetchContent)
 
   message(STATUS "Fetching zlib")
