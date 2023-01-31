@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.0.2)
-message("Florian HELLO!")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 if (${CMAKE_VERSION} VERSION_LESS "3.17.0")
