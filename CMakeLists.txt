@@ -9,6 +9,7 @@ project(libzip
   VERSION 1.8.0
   LANGUAGES C)
 
+option(FETCH_ZLIB "Fetching zlib" ON)
 option(ENABLE_COMMONCRYPTO "Enable use of CommonCrypto" ON)
 option(ENABLE_GNUTLS "Enable use of GnuTLS" ON)
 option(ENABLE_MBEDTLS "Enable use of mbed TLS" ON)
@@ -174,30 +175,30 @@ int foo(char * _Nullable bar);
 int main(int argc, char *argv[]) { }" HAVE_NULLABLE)
 
 test_big_endian(WORDS_BIGENDIAN)
+if(NOT FETCH_ZLIB)
+  find_package(ZLIB 1.1.2 REQUIRED)
+else()
+  include(FetchContent)
 
-#find_package(ZLIB 1.1.2 REQUIRED)
+  message(STATUS "Fetching zlib")
 
-include(FetchContent)
+  FetchContent_Declare(zlib
+    GIT_REPOSITORY https://github.com/madler/zlib.git
+    GIT_TAG v1.2.11
+    )
 
-message(STATUS "Fetching zlib")
+  FetchContent_GetProperties(zlib)
 
-FetchContent_Declare(zlib
-  GIT_REPOSITORY https://github.com/madler/zlib.git
-  GIT_TAG v1.2.11
-  )
+  if(NOT zlib_POPULATED)
+      FetchContent_Populate(zlib)
+      add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  endif()
 
-FetchContent_GetProperties(zlib)
-
-if(NOT zlib_POPULATED)
-    FetchContent_Populate(zlib)
-    add_subdirectory(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  target_include_directories(zlibstatic PUBLIC  
+      ${zlib_SOURCE_DIR}
+      ${zlib_BINARY_DIR}
+    )
 endif()
-
-target_include_directories(zlibstatic PUBLIC  
-    ${zlib_SOURCE_DIR}
-    ${zlib_BINARY_DIR}
-  )
-
 
 if(ENABLE_BZIP2)
   find_package(BZip2)
@@ -467,4 +468,6 @@ if(LIBZIP_DO_INSTALL)
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     )
 endif()
+
+
 
